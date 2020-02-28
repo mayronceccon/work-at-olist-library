@@ -42,3 +42,14 @@ class AuthorModelsTest(TestCase):
     def test_str_author(self):
         author = Author.objects.get(pk=1)
         self.assertEqual("Luciano Ramalho", str(author))
+
+    def test_strip_name_author(self):
+        author_model = Author(
+            name="   Osvaldo Santana Neto   "
+        )
+        author_model.save()
+
+        author = Author.objects.get(pk=2)
+
+        self.assertEqual(2, author.id)
+        self.assertEqual("Osvaldo Santana Neto", author.name)
