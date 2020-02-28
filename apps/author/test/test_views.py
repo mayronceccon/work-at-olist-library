@@ -33,7 +33,7 @@ class AuthorViewTest(TestCase):
         authors = Author.objects.all()
         serializer = AuthorSerializer(authors, many=True)
 
-        self.assertCountEqual(response.data, serializer.data)
+        self.assertCountEqual(response.data['results'], serializer.data)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_get_author_404(self):
@@ -44,7 +44,10 @@ class AuthorViewTest(TestCase):
         name_filter = "Luciano"
         response = client.get(f'/api/v1/authors/?name={name_filter}')
 
-        find_authors = [author['name'] for author in response.json()]
+        find_authors = [
+            author['name']
+            for author in response.json()['results']
+        ]
         self.assertCountEqual(
             find_authors,
             ["Luciano Ramalho"]
