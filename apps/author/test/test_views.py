@@ -39,3 +39,13 @@ class AuthorViewTest(TestCase):
     def test_get_author_404(self):
         response = client.get('/api/v1/authors/404/')
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+
+    def test_get_all_filter_name(self):
+        name_filter = "Luciano"
+        response = client.get(f'/api/v1/authors/?name={name_filter}')
+
+        find_authors = [author['name'] for author in response.json()]
+        self.assertCountEqual(
+            find_authors,
+            ["Luciano Ramalho"]
+        )

@@ -9,4 +9,13 @@ class AuthorViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
 
     def get_queryset(self):
-        return Author.objects.all()
+        queryset = Author.objects.all().order_by(
+            '-name'
+        )
+
+        name = self.request.query_params.get('name', None)
+        if name is not None:
+            queryset = queryset.filter(
+                name__icontains=name
+            )
+        return queryset
