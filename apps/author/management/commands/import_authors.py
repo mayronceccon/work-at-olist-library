@@ -1,5 +1,5 @@
 import csv
-import contextlib 
+import contextlib
 from django.db.utils import IntegrityError
 from django.core.management.base import BaseCommand
 from apps.author.models import Author
