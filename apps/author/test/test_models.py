@@ -4,23 +4,30 @@ from apps.author.models import Author
 
 
 class AuthorModelsTest(TestCase):
-    def setUp(self):
-        author_model = Author(
+    def __create_author_luciano(self):
+        author = Author(
             name="Luciano Ramalho"
         )
-        author_model.save()
+        author.save()
+        return author
+
+    def __create_author_osvaldo(self):
+        author = Author(
+            name="Osvaldo Santana Neto"
+        )
+        author.save()
+        return author
 
     def test_get_author(self):
+        self.__create_author_luciano()
         author = Author.objects.get(pk=1)
 
         self.assertEqual(1, author.id)
         self.assertEqual("Luciano Ramalho", author.name)
 
     def test_get_all_authors(self):
-        author_model = Author(
-            name="Osvaldo Santana Neto"
-        )
-        author_model.save()
+        self.__create_author_luciano()
+        self.__create_author_osvaldo()
 
         authors = Author.objects.all()
 
@@ -33,13 +40,12 @@ class AuthorModelsTest(TestCase):
         self.assertEqual(2, Author.objects.count())
 
     def test_unique_author(self):
+        self.__create_author_luciano()
         with self.assertRaises(IntegrityError):
-            author_model = Author(
-                name="Luciano Ramalho"
-            )
-            author_model.save()
+            self.__create_author_luciano()
 
     def test_str_author(self):
+        self.__create_author_luciano()
         author = Author.objects.get(pk=1)
         self.assertEqual("Luciano Ramalho", str(author))
 
@@ -49,7 +55,7 @@ class AuthorModelsTest(TestCase):
         )
         author_model.save()
 
-        author = Author.objects.get(pk=2)
+        author = Author.objects.get(pk=1)
 
-        self.assertEqual(2, author.id)
+        self.assertEqual(1, author.id)
         self.assertEqual("Osvaldo Santana Neto", author.name)
