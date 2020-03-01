@@ -3,7 +3,7 @@ from .models import Author
 
 
 class AuthorAdmin(admin.ModelAdmin):
-    ordering = ('-name',)
+    ordering = ('name',)
     fields = ('name',)
     list_display = ['name']
 

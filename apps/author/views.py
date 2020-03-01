@@ -10,7 +10,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Author.objects.all().order_by(
-            '-name'
+            'name'
         )
 
         name = self.request.query_params.get('name', None)
