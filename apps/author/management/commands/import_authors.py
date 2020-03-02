@@ -1,7 +1,6 @@
-import csv
-import contextlib
-from django.db.utils import IntegrityError
 from django.core.management.base import BaseCommand
+from .utils.file_read import FileRead
+from .utils.import_data import ImportData
 from apps.author.models import Author
 
 
@@ -10,8 +9,8 @@ class Command(BaseCommand):
 
     def __init__(self, stdout=None, stderr=None):
         super().__init__(stdout=stdout, stderr=stderr)
-        self.__authors = []
-        self.__files = []
+        self.__data = []
+        self.__messages = []
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -25,48 +24,22 @@ class Command(BaseCommand):
         self.__files = options["files"]
         if not self.__files:
             return
-        self.__list_files()
-        self.__list_authors()
 
-    def __list_files(self):
         for file_import in self.__files:
-            self.__open_file(file_import)
+            self.__file_read(file_import)
+            self.__import_authors()
+            self.__show_messages()
 
-    def __open_file(self, file_import):
-        with open(file_import, newline="") as csvfile:
-            self.__read_file(csvfile)
+    def __file_read(self, file_import):
+        file = FileRead(file_import)
+        file.execute()
+        self.__data = file.get_data()
 
-    def __read_file(self, csvfile):
-        reader = csv.reader(csvfile, delimiter=";", quotechar='"')
-        self.__list_register(reader)
+    def __import_authors(self):
+        import_authors = ImportData(Author, self.__data)
+        import_authors.execute()
+        self.__messages = import_authors.get_messages()
 
-    def __list_register(self, reader):
-        for (key, row) in enumerate(reader):
-            if not self.__valid_new_author(key, row):
-                continue
-            self.__set_author(row)
-
-    def __valid_new_author(self, key, row):
-        if key == 0 and row[0] == "name":
-            return False
-        return True
-
-    def __set_author(self, row):
-        with contextlib.suppress(IndexError):
-            name = row[0]
-            self.__authors.append({
-                "name": name
-            })
-
-    def __list_authors(self):
-        for author in self.__authors:
-            self.__create_author_or_continue(author)
-
-    def __create_author_or_continue(self, author):
-        try:
-            Author.objects.create(**author)
-            message = "%s created" % (author["name"])
-        except IntegrityError:
-            message = "%s already created" % (author["name"])
-
-        self.stdout.write(message)
+    def __show_messages(self):
+        for message in self.__messages:
+            self.stdout.write(message)
