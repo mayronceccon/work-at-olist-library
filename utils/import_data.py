@@ -19,8 +19,9 @@ class ImportData:
         return self.__messages
 
     def __create_or_continue(self, data):
+        key_dict = data[next(iter(data))]
         try:
             self.__model.objects.create(**data)
-            self.__messages.append("%s created" % (data["name"]))
+            self.__messages.append("%s created" % (key_dict))
         except IntegrityError:
-            self.__messages.append("%s already created" % (data["name"]))
+            self.__messages.append("%s already created" % (key_dict))
