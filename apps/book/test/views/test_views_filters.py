@@ -85,21 +85,6 @@ class BookViewFiltersTest(TestCase):
             ["Fluent Python"]
         )
 
-    def test_filter_author_id(self):
-        self.__start_data_filters()
-
-        filter_author = 1
-        response = client.get(f"/api/v1/books/?author={filter_author}")
-
-        find_books = [
-            book['name']
-            for book in response.json()['results']
-        ]
-        self.assertCountEqual(
-            find_books,
-            ["Python E Django - Desenvolvimento Agil De Aplicacoes Web"]
-        )
-
     def test_filter_author_name(self):
         self.__start_data_filters()
 
