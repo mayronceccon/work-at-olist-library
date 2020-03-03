@@ -22,19 +22,19 @@ class FileRead:
         self.__list_register(reader)
 
     def __list_register(self, reader):
+        keys = []
         for (key, row) in enumerate(reader):
-            if not self.__valid_data(key, row):
+            if self.__first_line(key):
+                keys = row
                 continue
-            self.__set_data(row)
+            self.__set_data(keys, row)
 
-    def __valid_data(self, key, row):
-        if key == 0 and row[0] == "name":
-            return False
-        return True
+    def __first_line(self, key):
+        if key == 0:
+            return True
+        return False
 
-    def __set_data(self, row):
+    def __set_data(self, keys, row):
         with contextlib.suppress(IndexError):
-            name = row[0]
-            self.__data.append({
-                "name": name
-            })
+            data = zip(keys, row)
+            self.__data.append(dict(data))

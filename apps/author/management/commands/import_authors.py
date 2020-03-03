@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from .utils.file_read import FileRead
+from utils.file_read import FileRead
 from .utils.import_data import ImportData
 from apps.author.models import Author
 
