@@ -131,3 +131,5 @@ dmypy.json
 .vscode
 
 csv_author.csv
+
+htmlcov/
