@@ -50,10 +50,14 @@ class BookModelsTest(TestCase):
         book.authors.add(self.__author_luciano)
         return book
 
+    def test_str_author(self):
+        book_created = self.__book_fluent_python()
+        book = Book.objects.get(id=book_created.id)
+        self.assertEqual("Fluent Python", str(book))
+
     def test_insert_ok_book(self):
         book = self.__book_python_and_django()
 
-        self.assertEqual(1, book.id)
         self.assertEqual(
             "Python E Django - Desenvolvimento Agil De Aplicacoes Web",
             book.name
@@ -70,14 +74,13 @@ class BookModelsTest(TestCase):
         )
 
     def test_update_ok_book(self):
-        self.__book_python_and_django()
+        book_created = self.__book_python_and_django()
 
-        book = Book.objects.get(pk=1)
+        book = Book.objects.get(pk=book_created.id)
         book.name = "New Name Book"
         book.publication_year = 2000
         book.save()
 
-        self.assertEqual(1, book.id)
         self.assertEqual(
             "New Name Book",
             book.name
@@ -94,19 +97,18 @@ class BookModelsTest(TestCase):
         )
 
     def test_delete_ok_book(self):
-        self.__book_python_and_django()
+        book_created = self.__book_python_and_django()
 
-        book = Book.objects.get(pk=1)
+        book = Book.objects.get(pk=book_created.id)
         book.delete()
 
         with self.assertRaises(Book.DoesNotExist):
-            Book.objects.get(pk=1)
+            Book.objects.get(pk=book_created.id)
 
     def test_get_book(self):
         book = self.__book_python_and_django()
         books = Book.objects.get(pk=book.id)
 
-        self.assertEqual(1, book.id)
         self.assertEqual(
             "Python E Django - Desenvolvimento Agil De Aplicacoes Web",
             book.name
