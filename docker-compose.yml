@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  database:
+    image: postgres
+    container_name: "postgres-work-at-olist"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - postgres-compose-network
+
+volumes:
+  db-data:
+    driver: local
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
