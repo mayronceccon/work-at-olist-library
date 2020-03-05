@@ -8,18 +8,18 @@ client = Client()
 
 class AuthorViewTest(TestCase):
     def setUp(self):
-        author_model = Author(
+        self.__author_luciano = Author(
             name="Luciano Ramalho"
         )
-        author_model.save()
+        self.__author_luciano.save()
 
-        author_model = Author(
+        self.__author_osvaldo = Author(
             name="Osvaldo Santana Neto"
         )
-        author_model.save()
+        self.__author_osvaldo.save()
 
     def test_get_author(self):
-        author_id = 1
+        author_id = self.__author_luciano.id
         response = client.get(f'/api/v1/authors/{author_id}/')
         author = Author.objects.get(pk=author_id)
 
