@@ -4,31 +4,24 @@ from apps.author.models import Author
 
 
 class AuthorModelsTest(TestCase):
-    def __create_author_luciano(self):
-        author = Author(
+    def setUp(self):
+        self.__author_luciano = Author(
             name="Luciano Ramalho"
         )
-        author.save()
-        return author
+        self.__author_luciano.save()
 
-    def __create_author_osvaldo(self):
-        author = Author(
+        self.__author_osvaldo = Author(
             name="Osvaldo Santana Neto"
         )
-        author.save()
-        return author
+        self.__author_osvaldo.save()
 
     def test_get_author(self):
-        self.__create_author_luciano()
-        author = Author.objects.get(pk=1)
+        author = Author.objects.get(id=self.__author_luciano.id)
 
-        self.assertEqual(1, author.id)
+        self.assertEqual(self.__author_luciano.id, author.id)
         self.assertEqual("Luciano Ramalho", author.name)
 
     def test_get_all_authors(self):
-        self.__create_author_luciano()
-        self.__create_author_osvaldo()
-
         authors = Author.objects.all()
 
         find_authors = [author.name for author in authors]
@@ -40,22 +33,23 @@ class AuthorModelsTest(TestCase):
         self.assertEqual(2, Author.objects.count())
 
     def test_unique_author(self):
-        self.__create_author_luciano()
         with self.assertRaises(IntegrityError):
-            self.__create_author_luciano()
+            author = Author(
+                name="Luciano Ramalho"
+            )
+            author.save()
 
     def test_str_author(self):
-        self.__create_author_luciano()
-        author = Author.objects.get(pk=1)
+        author = Author.objects.get(id=self.__author_luciano.id)
         self.assertEqual("Luciano Ramalho", str(author))
 
     def test_strip_name_author(self):
         author_model = Author(
-            name="   Osvaldo Santana Neto   "
+            name="   Dan Brown   "
         )
         author_model.save()
 
-        author = Author.objects.get(pk=1)
+        author = Author.objects.get(id=author_model.id)
 
-        self.assertEqual(1, author.id)
-        self.assertEqual("Osvaldo Santana Neto", author.name)
+        self.assertEqual(author_model.id, author.id)
+        self.assertEqual("Dan Brown", author.name)
