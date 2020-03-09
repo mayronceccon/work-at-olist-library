@@ -16,32 +16,33 @@ pip install -r requirements.txt
 
 cp .env.example .env
 
-docker-compose up --build
-
 python manage.py migrate
 ```
 
 # Test
-```
+```bash
 python manage.py test
 ```
 
 ## Coverage Report
-```
+```bash
 coverage run manage.py test && coverage html
 ```
 
 # Environment
 |   |   |
 |---|---|
-Computer||
 S.O|Fedora 31|
-Editor|VSCode|
+Editor|VSCode 1.42.1|
 Django Version|3.0.3|
-Python Version||
+Python Version|3.7.6|
 Django Rest Framework Version|3.11.0|
-Docker Compose Version||
 
 # Documentation
 
 [https://library-work-at-olist.herokuapp.com/](https://library-work-at-olist.herokuapp.com/)
+
+## Authors Import
+```bash
+python manage.py import_authors filename.csv
+```
